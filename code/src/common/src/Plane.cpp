@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <array>
 
-#include "Plane.h"
-#include "BoundingBox.h"
-#include "PolyModel.h"
+#include "common/Plane.h"
+#include "common/BoundingBox.h"
+#include "common/PolyModel.h"
 
 using namespace std;
 

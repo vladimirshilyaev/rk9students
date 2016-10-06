@@ -1,4 +1,4 @@
-#include "PolyModel.h"
+#include "common/PolyModel.h"
 #include <fstream>
 
 using namespace std;
