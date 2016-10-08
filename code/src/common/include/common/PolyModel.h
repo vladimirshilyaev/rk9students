@@ -5,9 +5,11 @@
 #include "Point.h"
 #include "Triangle.h"
 
-namespace Modelling
+#include "common/common_api.h"
+
+namespace rk9
 {
-	class PolyModel {
+	class COMMON_API PolyModel {
 	
 		std::vector<Point> Points;
 		std::vector<Triangle> Triangles;

@@ -1,11 +1,13 @@
 #pragma once
+
 #include "PolyModel.h"
 #include "BoundingBox.h"
 
+#include "common/common_api.h"
 
-namespace Modelling
+namespace rk9
 {
-	class Plane {
+	class COMMON_API Plane {
 		double A, B, C, D;
 	
 	public:

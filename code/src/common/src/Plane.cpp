@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace Modelling {
+namespace rk9 {
 
 	bool Plane::GetIntersectionWithLine(Point point_1, Point point_2, Point& result) {
 

@@ -1,9 +1,10 @@
-#include "common/PolyModel.h"
 #include <fstream>
+
+#include "common/PolyModel.h"
 
 using namespace std;
 
-namespace Modelling
+namespace rk9
 {
 	int PolyModel::ReadFromSTLFile(char * filename) {
 

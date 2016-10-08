@@ -1,8 +1,11 @@
 #pragma once
 
-namespace Modelling {
+#include "common/common_api.h"
 
-	struct BoundingBox {
+
+namespace rk9 {
+
+	struct COMMON_API BoundingBox {
 		double 
 			Xmin = -100.0,
 			Xmax = +100.0, 

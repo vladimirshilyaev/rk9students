@@ -13,13 +13,13 @@ configure_file(version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/${META_PROJECT_N
 # 
 
 # Libraries
-set(IDE_FOLDER "")
+set(IDE_FOLDER "Libs")
 add_subdirectory(common)
 #add_subdirectory(fiblib)
 
-# Examples
-#set(IDE_FOLDER "Examples")
-#add_subdirectory(examples)
+# Apps
+set(IDE_FOLDER "Apps")
+add_subdirectory(sample_app)
 
 # Tests
 #set(IDE_FOLDER "Tests")

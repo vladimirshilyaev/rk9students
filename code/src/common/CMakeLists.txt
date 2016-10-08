@@ -14,7 +14,7 @@
 set(target common)
 
 # Exit here if required dependencies are not met
-message(STATUS "Lib ${target}")
+message(STATUS "Lib: ${target}")
 
 # Set API export file and macro
 string(TOUPPER ${target} target_upper)
