@@ -1,79 +1,55 @@
-# C++ CMake Project Template
+# Устройство и сборка исходного кода проекта
 
-cmake-init is a copy and paste template, that provides the following features:
- * Cross Platform
-  * Windows
-  * Linux
-  * Mac
- * Libraries, Applications, Testing template
- * Documentation template
- * Installation, Packaging template
- * CMake find script template for defined libraries
+## Устройство исходного кода
 
-The files of cmake-init are an instantiation of the templates containing:
-  * Example app
-  * Example lib
-  * Example test
-  * Example documentation
-  * Example package
+Весь исходный код расложен по папкам внутри директории ```src```. У каждого проекта своя папка, в которой должен лежать код только этого проекта (студенты не должны вносить изменения в чужие проекты). Кроме того, есть две особые папки:
 
-| Service | System | Compiler | Status |
-| ------- | ------ | -------- | -----: |
-|  [Travis-CI](https://travis-ci.org/cginternals/cmake-init) | Ubuntu 14.04 | GCC 4.8, Clang 3.5 | [![Build Status](https://travis-ci.org/cginternals/cmake-init.svg?branch=master)](https://travis-ci.org/cginternals/cmake-init) |
-| Jenkins <br><br><br><br> | Ubuntu 14.04 <br><br><br><br> | GCC 4.7 <br> GCC 4.8 <br> GCC 4.9 <br> GCC 5.3 <br> Clang 3.5 <br> | [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-linux-gcc4.7)](http://jenkins.hpi3d.de/job/cmake-init-linux-gcc4.7) <br> [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-linux-gcc4.8)](http://jenkins.hpi3d.de/job/cmake-init-linux-gcc4.8) <br> [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-linux-gcc4.9)](http://jenkins.hpi3d.de/job/cmake-init-linux-gcc4.9) <br> [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-linux-gcc5.3)](http://jenkins.hpi3d.de/job/cmake-init-linux-gcc5.3) <br> [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-linux-clang3.5)](http://jenkins.hpi3d.de/job/cmake-init-linux-clang3.5) <br> |
-| Jenkins <br><br> | Windows 10 <br><br> | MSVC 2013 Update 5 <br>  MSVC 2015 Update 1 <br> | [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-windows-msvc2013)](http://jenkins.hpi3d.de/job/cmake-init-windows-msvc2013) <br> [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-windows-msvc2015)](http://jenkins.hpi3d.de/job/cmake-init-windows-msvc2015) <br> |
-| Jenkins | OS X 10.10 | AppleClang 6.0 | [![Build Status](http://jenkins.hpi3d.de/buildStatus/icon?job=cmake-init-osx-clang3.5)](http://jenkins.hpi3d.de/job/cmake-init-osx-clang3.5) |
+* ```common``` - здесь располагается общая библиотека, которую можно подключать к своему проекту. Дополнять общую библиотеку может каждый, кто считает, что его код достаточно полезен для других участников
+* ```sample_app``` - здесь вы найдете правильно настроенный пример проекта, который поможет вам настроить собственный проект. Вносить изменения в пример нельзя.
 
-Please note that our OS X build node is currently broken (physically). However, *cmake-init* is supported and maintained for OS X as well.
+## Система сборки
 
+С целью обеспечить высокую гибкость и кросс-плстформенность в репозитории используется система сборки CMake. Студенты также должны использовать CMake, интегрировав свой сценарий сборки в репозиторий. Использование других систем сборки (MSBuild, проекты Visual Studio) не допускается. Исключением может служить только проект веб-приложения (```webapp```).
 
-## Design Decisions
+## Процедура сборки
 
-ToDo: revisit!
+Сборка всего кода в репозитории возможна с помощью всего нескольких команд. Находясь в каталоге ```code```, введите:
 
-#### Console vs. Windows App (Windows only)
+```
+mkdir build
+cd build
+cmake .. -G"Visual Studio 14"
+```
 
-decisions:
-* we do not use the msvc subsystem linker flag
-* we do not use the add_executable win32 property
-* instead the ```set_target_properties``` with the ```WIN32_EXECUTABLE``` flag on target executable is used
-* we use the same subsystem for all configurations of a single target (no switching between, e.g., debug and release)
+В папке build будет сгенерировано решение ```rk9works```, содержащее все проекты. Проекты студентов сгруппированы в раздел ```Apps```, а общая библиотека находится в разделе ```Libs```. Щелкните правой кнопкой мыши по проекту и выберите ```Build```, чтобы собрать его.
 
-rationale:
-typically, only released 'feature' applications are required to decide on their subsystem, and in the case of 'gui-heavy' applications the windows subsystem is preferred (since the std output is probably piped into widgets, logfiles, or even discard).
+### Сборка общей библиотеки
 
-furthermore, console output is usually more relevant for development/debugging purposes, already using console or IDE with appropriate console output handling
+Осуществляется так же, как сборка любого другого проекта. Особенность заключается в том, что если ваше приложение использует код из общей библиотеки (как, например, проект ```sample_app```), то при запуске вашего приложения могут быть не найдены скомпилированные файлы библиотеки. Решение заключается в том, чтобы собрать специальный проект под названием ```INSTALL```, который автоматически произведет установку нужных файлов в системные каталоги. После этого проблема исчезнет.
+
+### Адаптация вашего проекта к системе сборки
+
+Чтобы адаптировать свой проект, следует сначала внимательно изучить проект ```sample_app```. Обратите внимание на следующее:
+
+* Как подключаются заголовочные файлы директивой ```#include```
+* Изучите файл ```\src\sample_app\CMakeLists.txt```. 
+* Изучите файл ```\src\CMakeLists.txt```. 
+* Также обратите внимание на корневой файл ```CMakeLists.txt```, расположенный непосредственно в папке ```code```.
+
+Разобравшись с тем, как устроена система сборки проекта ```sample_app```, приступите к созданию системы сборки для своего проекта. Рекомендуется скопировать содержимое этой папки в свой каталог, а затем произвести необходимые изменения в файлах:
+
+* ```\src\ваш_проект\CMakeLists.txt```
+* ```\src\CMakeLists.txt```
 
 
+#Внимание!
+> Не используйте средства управления проектами в Visual Studio! Добавление, удаление файлов в проект и прочие действия реализуются > **только** путем редактирования файлов ```CMakeLists.txt```. После внесения правок в любой из этих файлов система сборки обнаружит изменения и пересоздаст решение целиком. Вам останется только перезагрузить проект в Visual Studio, когда появится соответствующее окно.
+Любые изменения, не отраженные в файлах ```CMakeLists.txt```, **будут потеряны**!
 
-ToDo: Add missing content, bring into markdown form
+### Добавление тестов
 
+_раздел находится в разработке_
 
-Scenarios covered in cmake-init:
+### Добавление внешних файлов со входными данными (STL и т.п.)
 
-
-1) Development
-
-The project is contained in a source directory for active development.
-
-binaries: ./build
-rpath:    absolute paths to all dependencies
-datapath: ..
-
-
-2) Installation (default)
-
-The project is installed in a self-contained directory, ready for being moved or copied to another location or computer.
-
-binaries: ./bin
-rpath:    $ORIGIN/../lib
-datapath: ..
-
-
-3) Installation (unix system install)
-
-The project is installed globally on a system.
-
-binaries: /usr/[local/]bin
-rpath:    empty
-datapath: /usr/[local/]share/<projectname>
+_раздел находится в разработке_
