@@ -185,6 +185,14 @@ target_link_libraries(${target}
 )
 
 
+#
+# Tests
+#
+
+add_subdirectory(test)
+
+
+
 # 
 # Deployment
 # 

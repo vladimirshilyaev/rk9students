@@ -55,6 +55,9 @@ set_target_properties(${target}
 # Include directories
 # 
 
+#MESSAGE (STATUS "DEFAULT_INCLUDE_DIRECTORIES = ${DEFAULT_INCLUDE_DIRECTORIES}")
+
+
 target_include_directories(${target}
     PRIVATE
     ${DEFAULT_INCLUDE_DIRECTORIES}
