@@ -36,6 +36,8 @@ add_executable(${target}
     ${sources}
 )
 
+
+
 # Create namespaced alias
 add_executable(${META_PROJECT_NAME}::${target} ALIAS ${target})
 
@@ -55,14 +57,11 @@ set_target_properties(${target}
 # Include directories
 # 
 
-#MESSAGE (STATUS "DEFAULT_INCLUDE_DIRECTORIES = ${DEFAULT_INCLUDE_DIRECTORIES}")
-
-
-target_include_directories(${target}
-    PRIVATE
-    ${DEFAULT_INCLUDE_DIRECTORIES}
-    ${PROJECT_BINARY_DIR}/src/include
-)
+#target_include_directories(${target}
+#    PRIVATE
+#    #${DEFAULT_INCLUDE_DIRECTORIES}
+#    ${PROJECT_BINARY_DIR}/src/include
+#)
 
 
 # 
@@ -104,7 +103,6 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
 )
-
 
 # 
 # Deployment

@@ -19,6 +19,11 @@ namespace rk9
 			Y(y), 
 			Z(z) 
 		{};
+
+		bool operator==(const rk9::Point& p) const
+		{
+			return (X == p.X && Y == p.Y && Z == p.Z);
+		}
 	};
 
 

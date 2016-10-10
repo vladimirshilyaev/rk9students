@@ -61,7 +61,7 @@ option(BUILD_SHARED_LIBS     "Build shared instead of static libraries."        
 option(OPTION_SELF_CONTAINED "Create a self-contained install with all dependencies." OFF)
 option(OPTION_BUILD_TESTS    "Build tests."                                           ON)
 option(OPTION_BUILD_DOCS     "Build documentation."                                   OFF)
-option(OPTION_BUILD_APPS     "Build applications."                                    OFF)
+option(OPTION_BUILD_APPS     "Build applications."                                    ON)
 
 
 # 
