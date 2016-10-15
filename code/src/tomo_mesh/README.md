@@ -7,8 +7,8 @@
 
 Необходимые инструменты:
 
-* CMake(https://cmake.org/)
-* Conan(https://conan.io/)
+* CMake (https://cmake.org/)
+* Conan (https://conan.io/)
 
 Склонировав репозиторий, соберите DCMTK вручную (как любой Cmake-проект) , затем выполните (для Debug-сборки):
 
