@@ -141,4 +141,17 @@ namespace rk9
 
 		Triangles.push_back(tr);
 	}
+	unsigned PolyModel::GetNumberOfTriangles() {
+
+		unsigned number = Triangles.size();
+		return number;
+	}
+	Point* PolyModel::GetPointsOfTriangle(unsigned i) {
+		Point *points = new Point[3];
+		
+		points[0].X = pm.Points[j * 3].X; points[0].Y = pm.Points[j * 3].Y; points[0].Z = pm.Points[j * 3].Z;
+		points[1].X = pm.Points[j * 3 + 1].X; points[1].Y = pm.Points[j * 3 + 1].Y; points[1].Z = pm.Points[j * 3 + 1].Z;
+		points[2].X = pm.Points[j * 3 + 2].X; points[2].Y = pm.Points[j * 3 + 2].Y; points[2].Z = pm.Points[j * 3 + 2].Z;
+		return points;
+	}
 }
