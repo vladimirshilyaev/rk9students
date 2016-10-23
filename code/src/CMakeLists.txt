@@ -22,6 +22,11 @@ set(IDE_FOLDER "Apps")
 add_subdirectory(sample_app)
 
 
+# Apps
+set(IDE_FOLDER "Apps")
+add_subdirectory(boolean_poly)
+
+
 # 
 # Deployment
 # 
