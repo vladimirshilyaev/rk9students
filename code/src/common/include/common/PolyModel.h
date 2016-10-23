@@ -21,6 +21,7 @@ namespace rk9
 		void AddTriangle(Point p1, Point p2, Point p3);
 		unsigned GetNumberOfTriangles();
 		Point* GetPointsOfTriangle(unsigned i);
+		
 
 
 	};
