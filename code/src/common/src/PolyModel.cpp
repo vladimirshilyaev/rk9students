@@ -143,19 +143,23 @@ namespace rk9
 	}
 
 	//return the number of triangles in polymodel
-	unsigned PolyModel::GetNumberOfTriangles() { 
+	unsigned PolyModel::GetTrianglesCount() {
 
-		unsigned number = Triangles.size();
-		return number;
+		return Triangles.size();
 	}
 
-	//return the massive with 3 points of needed triangle
-	Point* PolyModel::GetPointsOfTriangle(unsigned j) {
-		Point *points = new Point[3];
+	//return the massive with 3 points of needed triangle, j is the index of triangle
+	vector<Point>* PolyModel::GetTriangleVertices(unsigned j) {
+
+		if (j > Points.size() * 3)
+			return 0;
+
+		vector<Point> *points = new vector<Point>;
+
+		points->push_back(Points[j * 3]);
+		points->push_back(Points[j * 3+1]);
+		points->push_back(Points[j * 3+2]);
 		
-		points[0].X = Points[j * 3].X; points[0].Y = Points[j * 3].Y; points[0].Z = Points[j * 3].Z;
-		points[1].X = Points[j * 3 + 1].X; points[1].Y = Points[j * 3 + 1].Y; points[1].Z = Points[j * 3 + 1].Z;
-		points[2].X = Points[j * 3 + 2].X; points[2].Y = Points[j * 3 + 2].Y; points[2].Z = Points[j * 3 + 2].Z;
 		return points;
 	}
 	
