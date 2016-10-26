@@ -1,5 +1,5 @@
 {
-  "name": "Angular2Spa",
+  "name": "MedCad",
   "version": "0.0.0",
   "dependencies": {
     "@angular/common": "2.0.0",
@@ -38,8 +38,10 @@
     "webpack-externals-plugin": "^1.0.0",
     "webpack-hot-middleware": "^2.10.0",
     "webpack-merge": "^0.14.1",
-    "zone.js": "^0.6.21",
-    "node-saas": "^3.10.1",
+    "zone.js": "^0.6.21"
+  },
+  "devDependencies": {
+    "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2"
   }
 }
