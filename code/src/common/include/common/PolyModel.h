@@ -6,7 +6,9 @@
 #include "Triangle.h"
 
 #include "common/common_api.h"
-using namespace std;
+
+
+
 namespace rk9
 {
 	class COMMON_API PolyModel {
@@ -21,9 +23,7 @@ namespace rk9
 		void AddTriangle(Point p1, Point p2, Point p3);
 		unsigned GetTrianglesCount();
 
-		vector<Point>* GetTriangleVertices(unsigned index);
-		
-
+		std::vector<Point> GetTriangleVertices(unsigned index);
 
 	};
 }
