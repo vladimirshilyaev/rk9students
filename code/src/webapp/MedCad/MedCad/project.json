@@ -21,6 +21,7 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+    "Microsoft.EntityFrameworkCore": "1.0.0",
     "MySql.Data.EntityFrameworkCore": "7.0.5-IR21"
   },
 
