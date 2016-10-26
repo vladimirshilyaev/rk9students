@@ -357,13 +357,14 @@ static void StereoCallibration(VideoCapture camera1, VideoCapture camera2)
 		char c = (char)waitKey();
 		if (c == 27 || c == 'q' || c == 'Q')
 		{
+			destroyWindow("corners");
 			destroyWindow("rectified");
 			break;
 		}
 	}
 }
 
-static void CreatROI(Mat *capture1, Mat *capture2, Rect *roi1, Rect *roi2, Size imgsize)
+static void CreatROI(Mat *capture1, Mat *capture2, Rect *roi1, Rect *roi2, Size imgsize, double *cx, double *cy)
 {
 	//Инициализация матриц камеры, векторов вращения, перемещения, координат смещения для изображений
 	Mat R1, R2, R, T, P1, P2, M1, M2, D1, D2, Q, rect_map[2][2], img1rect, img2rect;
@@ -388,6 +389,10 @@ static void CreatROI(Mat *capture1, Mat *capture2, Rect *roi1, Rect *roi2, Size 
 		fs["D1"] >> D1;
 		fs["D2"] >> D2;
 	}
+
+	//Получение координаты оптической оси
+	cx = &M1.at<double>(0, 2);
+	cy = &M1.at<double>(1, 2);
 
 	//Вычисление областей для работы с изображением
 	stereoRectify(M1, D1, M2, D2, imgsize, R, T, R1, R2, P1, P2, Q, CALIB_ZERO_DISPARITY, -1, imgsize, roi1, roi2);
@@ -471,7 +476,7 @@ static void FindCircles(Mat capture1, int *params,	vector<Vec3f> *circles)
 
 
 
-int main()
+int main(int argc, char** argv)
 {
 	char a;
 	Mat frame1, frame2, gframe1, gframe2, disp;
@@ -479,24 +484,35 @@ int main()
 	const string postfix = ".png";
 	Vec3f coords_and_radius;
 	Rect roi1, roi2;
-	double depth=0, baseline=62, focal_length=4.1 , sencorsize=0.005;
+	double depth=0, baseline=90, focal_length=4.1, sencor_elem_size=5.5, X=0, Y=0,cx=0,cy=0;
 	int source_of_image = 0;
-
+	double fps = atof(argv[1]);
+	
+	
 	//Инициализация камер
-	VideoCapture cap1(2);
+	VideoCapture cap1(0);
 	if (!cap1.isOpened())
 		return -1;
-	VideoCapture cap2(3);
+	VideoCapture cap2(2);
 	if (!cap2.isOpened())
 		return -2;
 
-	
+
+
+	//Калибровка камер
 	cout << "Do you need calibration?Y/N\n";
 	cin >> a;
 	if (a == 'Y')
 	{
 		StereoCallibration(cap1,cap2);
 	}
+
+
+	//Настройка частоты захвата изображения
+	cap1.set(CV_CAP_PROP_FPS, fps);
+	cap2.set(CV_CAP_PROP_FPS, fps);
+	//fps=cap1.get(CV_CAP_PROP_FPS);
+
 
 	vector<Vec3f> circles1, circles2;
 
@@ -554,10 +570,6 @@ int main()
 			frame1 = imread(img_prefix + "1_2" + postfix, 1);
 			frame2 = imread(img_prefix + "2_2" + postfix, 1);
 		}
-
-		//Исправление изображений
-		CreatROI(&frame1, &frame2, &roi1, &roi2, frame1.size());
-
 		//Создания изображений
 		gframe1.create(480, 640, CV_8UC1);
 		gframe2.create(480, 640, CV_8UC1);
@@ -565,10 +577,27 @@ int main()
 		//Конвертация изображений в градации серого
 		cvtColor(frame1, gframe1, CV_BGR2GRAY);
 		cvtColor(frame2, gframe2, CV_BGR2GRAY);
+
+		//Нормализация изображений
+		unsigned int bright_of_frame1 = 0, bright_of_frame2 = 0;
+		double difference_of_averadge_bright = 0;
+		for (int i = 0;i<640;i++)
+			for (int j = 0;j < 480;j++)
+			{
+				bright_of_frame1 += gframe1.at<uchar>(j, i);
+				bright_of_frame2 += gframe2.at<uchar>(j, i);
+			}
+		difference_of_averadge_bright = abs((bright_of_frame1 / (640 * 480)) - (bright_of_frame2 / (640 * 480)));
+		for (int i = 0; i < 640;i++)
+			for (int j = 0; j < 480;j++)
+				gframe1.at<uchar>(j, i) -= difference_of_averadge_bright;
+
+		//Исправление изображений
+		CreatROI(&gframe1, &gframe2, &roi1, &roi2, gframe1.size(),&cx,&cy);
 		
-		//Поиск маркеров
-		FindCircles(gframe1,parametrs_for_hough, &circles1);
-		FindCircles(gframe2, parametrs_for_hough, &circles2);
+		//Уменьшение шума на изображениях
+		medianBlur(gframe1, gframe1, 3);
+		medianBlur(gframe2, gframe2, 3);
 
 		//Задание параметров для поиска окружностей
 		parametrs_for_hough[0] = getTrackbarPos("Threshold", "Parameters for Hough");
@@ -577,7 +606,11 @@ int main()
 		parametrs_for_hough[3] = getTrackbarPos("MinRad", "Parameters for Hough");
 		parametrs_for_hough[4] = getTrackbarPos("MaxRad", "Parameters for Hough");
 		parametrs_for_hough[5] = getTrackbarPos("Blured", "Parameters for Hough");
-		
+
+		//Поиск маркеров
+		FindCircles(gframe1,parametrs_for_hough, &circles1);
+		FindCircles(gframe2, parametrs_for_hough, &circles2);
+				
 		//Поиск карты неравенства
 		if (first_time_matching)
 			//Подбор параметров на одном изображении для наилучшего отображения карты глубины
@@ -585,14 +618,15 @@ int main()
 			{
 				imshow("capture1", gframe1);
 				imshow("capture2", gframe2);
-				StereoMatch(gframe1, gframe2, &disp, parametrs_for_matching);
-				imshow("disparity", disp);
-
+				
 				parametrs_for_matching[0] = getTrackbarPos("setPreFilterCap", "Parameters for StereoMatching");
 				parametrs_for_matching[1] = getTrackbarPos("setBlockSize", "Parameters for StereoMatching");
 				parametrs_for_matching[2] = getTrackbarPos("setTextureThreshold", "Parameters for StereoMatching");
 				parametrs_for_matching[3] = getTrackbarPos("setNumDisparities", "Parameters for StereoMatching");
 				parametrs_for_matching[4] = getTrackbarPos("setUniquenessRatio", "Parameters for StereoMatching");
+				
+				StereoMatch(gframe1, gframe2, &disp, parametrs_for_matching);
+				imshow("disparity", disp);
 
 				char c = (char)waitKey(60);
 				if (c == 27)
@@ -604,8 +638,11 @@ int main()
 			}
 		else
 		{
-			StereoMatch(gframe1, gframe2, &disp, parametrs_for_matching);
+				StereoMatch(gframe1, gframe2, &disp, parametrs_for_matching);
 		}
+
+		//Вычисление поля зрения камеры
+		double field_of_view = 2 * atan(sencor_elem_size / 2 * focal_length);
 
 		//Отображение окружностей на карте глубины, подсчет расстояния и отображение на изображении
 		for (size_t i = 0; i < circles1.size(); i++)
@@ -613,17 +650,28 @@ int main()
 			coords_and_radius = circles1[i];
 			circle(disp, Point(coords_and_radius[0], coords_and_radius[1]), coords_and_radius[2], Scalar(0, 0, 255), 3, LINE_AA);
 			circle(disp, Point(coords_and_radius[0], coords_and_radius[1]), coords_and_radius[2], Scalar(0, 255, 0), 3, LINE_AA);
-			depth = ((baseline*focal_length) / (sencorsize*disp.at<uchar>(coords_and_radius[0], coords_and_radius[1])))*0.01;
+			
+			depth = ((baseline*focal_length) / (sencor_elem_size*disp.at<uchar>(coords_and_radius[1], coords_and_radius[0])));
+			X= 2 * sin(field_of_view / 2)*depth / gframe1.cols*(coords_and_radius[0]-cx);
+			Y = 2 * sin(field_of_view / 2)*depth / gframe1.rows*(coords_and_radius[1] - cy);
+
 			putText(frame1, to_string(depth), Point(coords_and_radius[0], coords_and_radius[1]), 1, 1, Scalar(0, 0, 255));
+			putText(frame1, to_string(X), Point(coords_and_radius[0], coords_and_radius[1] + 15), 1, 1, Scalar(0, 0, 255));
+			putText(frame1, to_string(Y), Point(coords_and_radius[0], coords_and_radius[1]+30), 1, 1, Scalar(0, 0, 255));
 		}
+
+
 		//Отображение полученных изображений
 		imshow("disparity", disp);
 		imshow("capture1", frame1);
 		imshow("capture2", frame2);
+
+
 		//Ожидание нажатия клавиши
 		char c = waitKey(100);
 		if (c == 27) break;
 	}
+
 
 	destroyAllWindows();
 	return 0;
