@@ -2,18 +2,16 @@
 
 #include <vector>
 
-#include "Point.h"
-#include "Triangle.h"
-
 #include "common/common_api.h"
 
+#include "Point.h"
+#include "Triangle.h"
 
 
 namespace rk9
 {
 	class COMMON_API PolyModel {
 	
-		std::vector<Point> Points;
 		std::vector<Triangle> Triangles;
 
 	public:

@@ -30,7 +30,6 @@ namespace rk9
 		float coordinates[9];
 
 		// Заранее выделим место под точки и треугольники
-		Points.reserve(3 * triangles_count);
 		Triangles.reserve(triangles_count);
 
 		for (unsigned i = 0; i < triangles_count; ++i) {
@@ -86,23 +85,21 @@ namespace rk9
 
 			// Запишем координаты треугольника
 			float coordinates[9];
-			Triangle tr;
-
-			tr = Triangles[i];
+			Triangle tr = Triangles[i];
 
 			vector<Point> pts = GetTriangleVertices(i);
 
-			coordinates[0] = static_cast<float>(pts[1].X);
-			coordinates[1] = static_cast<float>(pts[1].Y);
-			coordinates[2] = static_cast<float>(pts[1].Z);
+			coordinates[0] = static_cast<float>(pts[0].X);
+			coordinates[1] = static_cast<float>(pts[0].Y);
+			coordinates[2] = static_cast<float>(pts[0].Z);
 						   	 
-			coordinates[3] = static_cast<float>(pts[2].X);
-			coordinates[4] = static_cast<float>(pts[2].Y);
-			coordinates[5] = static_cast<float>(pts[2].Z);
+			coordinates[3] = static_cast<float>(pts[1].X);
+			coordinates[4] = static_cast<float>(pts[1].Y);
+			coordinates[5] = static_cast<float>(pts[1].Z);
 						   	 						 
-			coordinates[6] = static_cast<float>(pts[3].X);
-			coordinates[7] = static_cast<float>(pts[3].Y);
-			coordinates[8] = static_cast<float>(pts[3].Z);
+			coordinates[6] = static_cast<float>(pts[2].X);
+			coordinates[7] = static_cast<float>(pts[2].Y);
+			coordinates[8] = static_cast<float>(pts[2].Z);
 
 			fout.write(reinterpret_cast<char *>(coordinates), 9 * sizeof(float));
 
@@ -117,18 +114,8 @@ namespace rk9
 
 	void PolyModel::AddTriangle(Point p1, Point p2, Point p3)
 	{
-		int max_point_index = Points.size() - 1;
-
-		Points.push_back(p1);
-		Points.push_back(p2);
-		Points.push_back(p3);
-
-		Triangle tr;
-		tr.V[0] = max_point_index + 1;
-		tr.V[1] = max_point_index + 2;
-		tr.V[2] = max_point_index + 3;
-
-		Triangles.push_back(tr);
+		Triangle t{ p1, p2, p3 };
+		Triangles.push_back(t);
 	}
 
 	//return the number of triangles in polymodel
@@ -136,18 +123,15 @@ namespace rk9
 		return Triangles.size();
 	}
 
-	//Возвращает массив вершин треугольника под индексом index
+	// Возвращает массив вершин треугольника под индексом index
 	// Если треугольника с таким индексом нет, возвращает пустой массив
 	vector<Point> PolyModel::GetTriangleVertices(unsigned index) {
-
 		vector<Point> points;
-		
 		if (index <= GetTrianglesCount()) {
-			points.push_back(Points[index * 3]);
-			points.push_back(Points[index * 3 + 1]);
-			points.push_back(Points[index * 3 + 2]);
+			points.push_back(Triangles[index].Verts[0]);
+			points.push_back(Triangles[index].Verts[1]);
+			points.push_back(Triangles[index].Verts[2]);
 		}
-		
 		return points;
 	}
 	

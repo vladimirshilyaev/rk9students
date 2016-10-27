@@ -1,28 +1,32 @@
 #include "common/Triangle.h"
+#include "common/Plane.h"
+
 
 using namespace std;
 
 namespace rk9
 {
 	//find parameters A,B,C,D of normal.
-	double* Triangle::GetNormal() {
+	//Vector3 Triangle::GetNormal() {
+	//	Plane p = GetPlane();
+	//	return Vector3(p.A, p.B, p.C);
+	//};
 
-		double *params = new double[4];
+	//Plane Triangle::GetPlane() {
+	//	double A, B, C, D;
 
-		//find coordinates of vectors of triangle's vertices
-		double p12x = tr->at(1).X - tr->at(0).X;
-		double p12y = tr->at(1).Y - tr->at(0).Y;
-		double p12z = tr->at(1).Z - tr->at(0).Z;
+	//	//find coordinates of vectors of triangle's vertices
+	//	Vector3 v01(Verts[0], Verts[1]);
+	//	Vector3 v02(Verts[0], Verts[2]);
 
-		double p13x = tr->at(2).X - tr->at(0).X;
-		double p13y = tr->at(2).Y - tr->at(0).Y;
-		double p13z = tr->at(2).Z - tr->at(0).Z;
+	//	Vector3 product = Vector3::CrossProduct(v01, v02);
 
-		params[0] = p12y*p13z - p13y*p12z;
-		params[1] = -p12x*p13z + p13x*p12z;
-		params[2] = p12x*p13y - p13x*p12z;
-		params[3] = -params[0] * tr->at(1).X - params[1] * tr->at(1).Y - params[2] * tr->at(1).Z;
+	//	A = product.A;
+	//	B = product.B;
+	//	C = product.C;
 
-		return params;
-	}
+	//	D = -A * Verts[1].X - B * Verts[1].Y - C * Verts[1].Z;
+
+	//	return Plane(A, B, C, D);
+	//};
 }

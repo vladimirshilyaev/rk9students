@@ -7,22 +7,20 @@
 
 namespace rk9
 {
-	class COMMON_API Plane {
+	struct COMMON_API Plane {
 		double A, B, C, D;
-	
-	public:
-
-		Plane() : 
-			A(1.0), 
-			B(0.0), 
-			C(0.0), 
-			D(0.0) {}
+		
+		Plane() :
+			A(1.0),
+			B(0.0),
+			C(0.0),
+			D(0.0) {};
 
 		Plane(double a, double b, double c, double d) :
 			A(a),
 			B(b),
 			C(c),
-			D(d) {}
+			D(d) {};
 
 		// ѕолучить представление плоскости в виде многоугольника,
 		// ограниченного данным Bounding Box'ом
