@@ -20,20 +20,20 @@ namespace rk9
 			Z(z)
 		{}
 
-		//Point(const Point & p) {
-		//	X = p.X;
-		//	Y = p.Y;
-		//	Z = p.Z;
-		//}
+		Point(const Point & p) {
+			X = p.X;
+			Y = p.Y;
+			Z = p.Z;
+		}
 
-		//Point& operator=(const Point other) {
-		//	X = other.X;
-		//	Y = other.Y;
-		//	Z = other.Z;
-		//	return *this;
-		//}
+		Point& operator=(const Point other) {
+			X = other.X;
+			Y = other.Y;
+			Z = other.Z;
+			return *this;
+		}
 
-		//~Point() {}
+		~Point() {}
 
 		bool operator==(const rk9::Point& p) const
 		{

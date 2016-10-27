@@ -13,7 +13,7 @@ vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b);
 void IntersectTriangles(vector<Point> *, vector<Point> *, vector<Point> *);
 void IntersectEdgeTriangle(Point, Point, vector<Point> *, double *, vector<Point> *);
 bool IsPointInsideTriangle(Point, vector<Point>*);
-double TriangleArea(double, double, double);
+
 bool IsPlaneBetweenTriangle(vector<Point> *, vector<Point> *);
 
 
@@ -23,11 +23,11 @@ int main(int argc, char ** argv) {
 
 	PolyModel model_a, model_b;
 
-	vector<Point> intersection_points = GetIntersectionPoints(model_a, model_b);
+	//vector<Point> intersection_points = GetIntersectionPoints(model_a, model_b);
 
 	return 0;
 }
-
+/*
 vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
 
 	vector<Point> points;
@@ -48,6 +48,7 @@ vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
 	}
 	return points;
 }
+
 
 void IntersectTriangles(vector<Point> points_of_triangle_i, vector<Point> points_of_triangle_j, vector<Point> points) {
 
@@ -112,11 +113,6 @@ bool IsPointInsideTriangle(Point pp, vector<Point> *tr) {
 	else return false;
 }
 
-double GetTriangleArea(double a, double b, double c) { //a,b,c - edges(length) of triangle
-	double p = (a + b + c) / 2;
-	return sqrt(p*(p - a)*(p - b)*(p - c));
-}
-
 //check if there may be plane between triangles(all points of tr1 are on the one side of points of tr2)
 bool IsPlaneBetweenTriangle(vector<Point> *tr1, vector<Point> *tr2) {
 
@@ -144,3 +140,4 @@ bool IsPlaneBetweenTriangle(vector<Point> *tr1, vector<Point> *tr2) {
 
 }
 
+*/

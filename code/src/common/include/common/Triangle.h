@@ -2,7 +2,8 @@
 
 #include "common/common_api.h"
 
-//#include "Plane.h"
+#include <cmath>
+
 #include "Point.h"
 #include "Vector3.h"
 
@@ -12,7 +13,12 @@ namespace rk9
 		
 		Point Verts[3];
 
-		/*Triangle() {}
+		// Ссылки для упрощения записи
+	    Point &A = Verts[0], 
+			  &B = Verts[1], 
+			  &C = Verts[2];
+
+		Triangle() {}
 
 		~Triangle() {}
 
@@ -34,7 +40,15 @@ namespace rk9
 			Verts[1] = p2;
 			Verts[2] = p3;
 		}
-*/
+
+		// Вычислить площадь треугольника 
+		double GetArea(){
+			// S = 1/2 |AB x AC|
+			return Vector3::CrossProduct(Vector3{ A, B }, 
+										 Vector3{ A, C })
+				   .GetLength() / 2.0;
+		}
+
 		// Вычислить нормаль к треугольнику
 		//Vector3 GetNormal();
 
