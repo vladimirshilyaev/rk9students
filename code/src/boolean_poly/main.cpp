@@ -1,6 +1,8 @@
 #include <vector>
+
 #include "common/PolyModel.h"
 #include "common/Point.h"
+#include "common/Triangle.h"
 
 using namespace std;
 using namespace rk9;
@@ -12,7 +14,6 @@ vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b);
 
 void IntersectTriangles(vector<Point> *, vector<Point> *, vector<Point> *);
 void IntersectEdgeTriangle(Point, Point, vector<Point> *, double *, vector<Point> *);
-bool IsPointInsideTriangle(Point, vector<Point>*);
 
 bool IsPlaneBetweenTriangle(vector<Point> *, vector<Point> *);
 
@@ -23,11 +24,11 @@ int main(int argc, char ** argv) {
 
 	PolyModel model_a, model_b;
 
-	//vector<Point> intersection_points = GetIntersectionPoints(model_a, model_b);
+	vector<Point> intersection_points = GetIntersectionPoints(model_a, model_b);
 
 	return 0;
 }
-/*
+
 vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
 
 	vector<Point> points;
@@ -43,13 +44,13 @@ vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
 			vector<Point> points_of_triangle_j = model_b.GetTriangleVertices(j);
 			
 			//points of intersection of 2 triangles
-			IntersectTriangles(points_of_triangle_i, points_of_triangle_j, points); 
+			//IntersectTriangles(points_of_triangle_i, points_of_triangle_j, points); 
 		}
 	}
 	return points;
 }
 
-
+/*
 void IntersectTriangles(vector<Point> points_of_triangle_i, vector<Point> points_of_triangle_j, vector<Point> points) {
 
 	if (IsPlaneBetweenTriangle(points_of_triangle_i, points_of_triangle_j) == false) {
@@ -94,23 +95,6 @@ void IntersectEdgeTriangle(Point point1, Point point2, vector<Point> *points_of_
 		}
 
 	}
-}
-
-bool IsPointInsideTriangle(Point pp, vector<Point> *tr) {
-
-	double AB = sqrt(pow(tr->at(0).X - tr->at(1).X, 2) + pow(tr->at(0).Y - tr->at(1).Y, 2) + pow(tr->at(0).Z - tr->at(1).Z, 2));
-	double BC = sqrt(pow(tr->at(1).X - tr->at(2).X, 2) + pow(tr->at(1).Y - tr->at(2).Y, 2) + pow(tr->at(1).Z - tr->at(2).Z, 2));
-	double AC = sqrt(pow(tr->at(0).X - tr->at(2).X, 2) + pow(tr->at(0).Y - tr->at(2).Y, 2) + pow(tr->at(0).Z - tr->at(2).Z, 2));
-
-	double AP = sqrt(pow(pp.X - tr->at(0).X, 2) + pow(pp.Y - tr->at(0).Y, 2) + pow(pp.Z - tr->at(0).Z, 2));
-	double BP = sqrt(pow(pp.X - tr->at(1).X, 2) + pow(pp.Y - tr->at(1).Y, 2) + pow(pp.Z - tr->at(1).Z, 2));
-	double CP = sqrt(pow(pp.X - tr->at(2).X, 2) + pow(pp.Y - tr->at(2).Y, 2) + pow(pp.Z - tr->at(2).Z, 2));
-
-	double diff = TriangleArea(AP, BP, AB) + TriangleArea(AP, CP, AC) + TriangleArea(BP, CP, BC) - TriangleArea(AB, BC, AC);
-
-	if (diff < EPSILON)
-		return true;
-	else return false;
 }
 
 //check if there may be plane between triangles(all points of tr1 are on the one side of points of tr2)

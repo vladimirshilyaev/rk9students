@@ -26,7 +26,7 @@ namespace rk9
 			Z = p.Z;
 		}
 
-		Point& operator=(const Point other) {
+		Point& operator=(const Point& other) {
 			X = other.X;
 			Y = other.Y;
 			Z = other.Z;

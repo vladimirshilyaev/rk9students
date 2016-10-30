@@ -1,13 +1,15 @@
 #pragma once
 
-#include "PolyModel.h"
 #include "BoundingBox.h"
+#include "Point.h"
 
 #include "common/common_api.h"
 
 namespace rk9
 {
 	struct COMMON_API Plane {
+
+		// Параметры уравнения Ax + By + Cz + D = 0
 		double A, B, C, D;
 		
 		Plane() :
@@ -24,7 +26,7 @@ namespace rk9
 
 		// Получить представление плоскости в виде многоугольника,
 		// ограниченного данным Bounding Box'ом
-		PolyModel GetPolyRepresentation(BoundingBox bbox);
+		// PolyModel GetPolyRepresentation(BoundingBox bbox);
 
 		// Получить координаты точки пересечения плоскости с прямой.
 		// point_1, point_2 - точки, через которые проходит заданная прямая;

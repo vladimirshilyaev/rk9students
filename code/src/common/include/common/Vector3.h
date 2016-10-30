@@ -37,6 +37,12 @@ namespace rk9
 		// Вычисление векторного произведения
 		static Vector3 CrossProduct(Vector3 v1, Vector3 v2);
 
+		// Вычисление скаларяного произведения
+		static double DotProduct(Vector3 v1, Vector3 v2);
+
+		// Угол между двумя векторами
+		static double GetAngleBetweenVectors(Vector3 v1, Vector3 v2);
+
 		//Вычисление длины
 		double GetLength() {
 			return std::sqrt(A*A + B*B + C*C);
@@ -44,5 +50,6 @@ namespace rk9
 	};
 
 	bool COMMON_API operator==(const Vector3& v1, const Vector3& v2);
+
 
 }

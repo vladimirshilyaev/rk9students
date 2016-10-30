@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include "Plane.h"
 #include "Point.h"
 #include "Vector3.h"
 
@@ -50,9 +51,12 @@ namespace rk9
 		}
 
 		// Вычислить нормаль к треугольнику
-		//Vector3 GetNormal();
+		Vector3 GetNormal();
 
 		// Вычислить параметры уравнения плоскости, в кот. лежит треугольник
-		//Plane GetPlane();
+		Plane GetPlane();
+
+		// Проверка, лежит ли данная точка внутри треугольника
+		bool IsPointInsideTriangle(Point p);
 	};
 }
