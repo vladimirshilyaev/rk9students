@@ -37,11 +37,14 @@ set(headers
 	${include_path}/Plane.h
 	${include_path}/PolyModel.h
     ${include_path}/Triangle.h
+    ${include_path}/Vector3.h
 )
 
 set(sources
     ${source_path}/Plane.cpp
 	${source_path}/PolyModel.cpp
+	${source_path}/Triangle.cpp
+	${source_path}/Vector3.cpp
 )
 
 # Group source files
