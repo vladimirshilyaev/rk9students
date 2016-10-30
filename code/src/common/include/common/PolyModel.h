@@ -21,7 +21,7 @@ namespace rk9
 		void AddTriangle(Point p1, Point p2, Point p3);
 		unsigned GetTrianglesCount();
 
-		std::vector<Point> GetTriangleVertices(unsigned index);
+		Triangle GetTriangleVertices(unsigned index);
 
 	};
 }
