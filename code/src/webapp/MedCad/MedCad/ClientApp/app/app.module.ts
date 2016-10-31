@@ -6,6 +6,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { CadComponent } from './components/cad/cad.component';
 import { HeaderbarComponent } from './components/headerbar/headerbar.component';
 import { WorkspaceComponent } from './components/workspace/workspace.component';
+import { ModelsService } from './services/models/models.service'
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -15,6 +16,9 @@ import { WorkspaceComponent } from './components/workspace/workspace.component';
         ProfileComponent,
         HeaderbarComponent,
         WorkspaceComponent
+    ],
+    providers: [
+        ModelsService,
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
