@@ -22,7 +22,7 @@ const double EPSILON = 1E-10;
 
 int main(int argc, char ** argv) {
 
-	PolyModel model_a, model_b;
+	/*PolyModel model_a, model_b;
 
 	model_a.ReadFromSTLFile(argv[1]); 
 	model_b.ReadFromSTLFile(argv[2]); 
@@ -40,7 +40,7 @@ int main(int argc, char ** argv) {
 	
 	modelz.WriteToSTLFile(argv[3]);
 
-	return 0;
+	return 0;*/
 }
 
 vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
