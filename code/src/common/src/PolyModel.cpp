@@ -86,20 +86,20 @@ namespace rk9
 			// Запишем координаты треугольника
 			float coordinates[9];
 			Triangle tr = Triangles[i];
-
-			vector<Point> pts = GetTriangleVertices(i);
-
-			coordinates[0] = static_cast<float>(pts[0].X);
-			coordinates[1] = static_cast<float>(pts[0].Y);
-			coordinates[2] = static_cast<float>(pts[0].Z);
+			
+			
+			
+			coordinates[0] = static_cast<float>(tr.A.X);
+			coordinates[1] = static_cast<float>(tr.A.Y);
+			coordinates[2] = static_cast<float>(tr.A.Z);
 						   	 
-			coordinates[3] = static_cast<float>(pts[1].X);
-			coordinates[4] = static_cast<float>(pts[1].Y);
-			coordinates[5] = static_cast<float>(pts[1].Z);
+			coordinates[3] = static_cast<float>(tr.B.X);
+			coordinates[4] = static_cast<float>(tr.B.Y);
+			coordinates[5] = static_cast<float>(tr.B.Z);
 						   	 						 
-			coordinates[6] = static_cast<float>(pts[2].X);
-			coordinates[7] = static_cast<float>(pts[2].Y);
-			coordinates[8] = static_cast<float>(pts[2].Z);
+			coordinates[6] = static_cast<float>(tr.C.X);
+			coordinates[7] = static_cast<float>(tr.C.Y);
+			coordinates[8] = static_cast<float>(tr.C.Z);
 
 			fout.write(reinterpret_cast<char *>(coordinates), 9 * sizeof(float));
 
@@ -117,7 +117,7 @@ namespace rk9
 		Triangle t{ p1, p2, p3 };
 		Triangles.push_back(t);
 	}
-
+	
 	//return the number of triangles in polymodel
 	unsigned PolyModel::GetTrianglesCount() {
 		return Triangles.size();
@@ -125,14 +125,12 @@ namespace rk9
 
 	// Возвращает массив вершин треугольника под индексом index
 	// Если треугольника с таким индексом нет, возвращает пустой массив
-	vector<Point> PolyModel::GetTriangleVertices(unsigned index) {
-		vector<Point> points;
-		if (index <= GetTrianglesCount()) {
-			points.push_back(Triangles[index].Verts[0]);
-			points.push_back(Triangles[index].Verts[1]);
-			points.push_back(Triangles[index].Verts[2]);
-		}
-		return points;
+	Triangle PolyModel::GetTriangleVertices(unsigned index) {
+		
+		if (index <= GetTrianglesCount()) 
+			return Triangles[index];
+		
 	}
-	
+
 }
+

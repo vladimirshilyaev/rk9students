@@ -14,6 +14,7 @@ namespace rk9
 	
 		std::vector<Triangle> Triangles;
 
+
 	public:
 		int ReadFromSTLFile(char * filename);
 		int WriteToSTLFile(char * filename);
@@ -21,7 +22,7 @@ namespace rk9
 		void AddTriangle(Point p1, Point p2, Point p3);
 		unsigned GetTrianglesCount();
 
-		std::vector<Point> GetTriangleVertices(unsigned index);
-
+		Triangle GetTriangleVertices(unsigned index);
+		std::vector<Point>Points;
 	};
 }
