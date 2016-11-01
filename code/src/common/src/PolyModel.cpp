@@ -117,7 +117,7 @@ namespace rk9
 		Triangle t{ p1, p2, p3 };
 		Triangles.push_back(t);
 	}
-
+	
 	//return the number of triangles in polymodel
 	unsigned PolyModel::GetTrianglesCount() {
 		return Triangles.size();
@@ -131,5 +131,6 @@ namespace rk9
 			return Triangles[index];
 		
 	}
-	
+
 }
+
