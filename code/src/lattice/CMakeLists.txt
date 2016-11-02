@@ -24,15 +24,26 @@ message(STATUS "App: ${target}")
 set(sources
     main.cpp
     fparser.cpp
+    RectLattice.cpp
+    MarchingCubes.cpp
 )
 
 set(headers
     fparser.h
+	RectLattice.h
+	PointWithDensity.h
+	MarchingCubes.h
+	LookUpTable.h
+	glm/glm.hpp
 )
+
+#add_subdirectory(glm)
 
 # 
 # Create executable
 # 
+
+message (STATUS ${ROOT_HEADER})
 
 # Build executable
 add_executable(${target}
@@ -108,6 +119,8 @@ target_link_libraries(${target}
     PRIVATE
     ${DEFAULT_LINKER_OPTIONS}
 )
+
+
 
 # 
 # Deployment
