@@ -35,13 +35,13 @@ namespace MedCad
             // Create an employee instance and save the entity to the database
             var entry = new Model() { Id = 1, Data = "sdfdfs", CreationDate = "2015", UserId = 24 };
 
-            using (var context = ModelContextFactory.Create(connectionString))
+            /*using (var context = ModelContextFactory.Create(connectionString))
             {
                 context.Add(entry);
                 context.SaveChanges();
-            }
-
-            Console.WriteLine($"Employee was saved in the database with id: {entry.id}");
+            }*/
+             
+            Console.WriteLine($"Model was saved in the database with id: {entry.UserId}");
 
             host.Run();
         }
