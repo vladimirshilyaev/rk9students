@@ -1,91 +1,131 @@
-#include <iostream>
-#include <conio.h>
-#include <vector>
-
-#include "RectLattice.h"
-#include "PointWithDensity.h"
-#include "fparser.h"
+#include "common/PolyModel.h"
+#include <stdio.h>
 #include "MarchingCubes.h"
+#include "fparser.h"
 
-using namespace std;
-using namespace rk9;
+#define NFUNS 15
 
-// единицы изменения - мм
-int main(int argc, char ** argv) {
+enum Axis { X = 0, Y = 1, Z = 2 };
 
-	float isoval = 0.0;
+// original/topological MC switch
+int originalMC = 0;
 
-	int   originalMC = 0;
+// grid extension
+float xmin = -1.0f, xmax = 1.0f, ymin = -1.0f, ymax = 1.0f, zmin = -1.0f,
+zmax = 1.0f;
 
-	MarchingCubes mc;
-	
-	mc.set_resolution(2, 2, 2);
+// implicit formula
+char formula[1024];
 
-	mc.init_all();
+// implicit functions
+const char *fun_list[NFUNS] = {
+	"Type Formula", "Sphere",    "Ellipsoid", "Hyperboloid", "Plane",
+	"Cubic",        "Cushin",    "Cassini",   "Blooby",      "Chair",
+	"Cyclide",      "2 Spheres", "2 Torii",   "Heart",       "Helio" };
 
-	int i, j, k;
-	
-	float rx = 4;
-	float ry = 4;
-	float rz = 4;
-	
-	for (i = 0; i < 2; i++)	{
+// implicit functions
+const char *fun_def[NFUNS] = {
+	"f(x,y,z, c,i)", "x^2+y^2+z^2-0.49", "2*x^2+y^2+z^2-0.49",
+	"2*x^2-y^2-z^2-0.49", "x+y+z", "4*y^2-8*x^3+2*x",
+	"(1.5*z)^2*(1.5*x)^2 - (1.5*z)^4 - 2*(1.5*z)*(1.5*x)^2 + 2*(1.5*z)^3 + "
+	"(1.5*x)^2 - (1.5*z)^2 - ((1.5*x)^2 - (1.5*z))*((1.5*x)^2 - (1.5*z)) - "
+	"(1.5*y)^4 - 2*(1.5*x)^2*(1.5*y)^2 - (1.5*y)^2*(1.5*z)^2 + "
+	"2*(1.5*y)^2*(1.5*z) + (1.5*y)^2",
+	"((1.7*x)^2 + (1.7*y)^2 + (1.7*z)^2 + 0.45^2)*((1.7*x)^2 + (1.7*y)^2 + "
+	"(1.7*z)^2 + 0.45^2) - 16*0.45^2*((1.7*x)^2 + (1.7*z)^2) - 0.25",
+	"(3*x)^4 - 45*x^2+ (3*y)^4 - 45*y^2 + (3*z)^4 - 45*z^2 + 11.8",
+	"((5*x)^2+(5*y)^2+(5*z)^2-0.95*25)*((5*x)^2+(5*y)^2+(5*z)^2-0.95*25)-0.8*(("
+	"(5*z)-5)^2-2*(5*x)^2)*(((5*z)+5)^2-2*(5*y)^2)",
+	"(25 - (6.9)^2)*(25 - (2.9)^2)*((10*x+4)^4+(10*y)^4+(10*z)^4)+ 2*((25 - "
+	"(6.9)^2 )*(25 - (2.9)^2) * "
+	"((10*x+4)^2*(10*y)^2+(10*x+4)^2*(10*z)^2+(10*y)^2*(10*z)^2))+ "
+	"18*((21+4.9^2)* (4*(10*x+4)+9))*((10*x+4)^2+(10*y)^2+(10*z)^2)+ "
+	"4*3^4*(2*(10*x+4))*(-9+2*(10*x+4))+4*3^4*4.9^2*(10*y)^2+3^8",
+	"((x-0.31)^2+(y-0.31)^2+(z-0.31)^2-0.263) * "
+	"((x+0.3)^2+(y+0.3)^2+(z+0.3)^2-0.263)",
+	"( ( (8*x)^2 + (8*y-2)^2 + (8*z)^2 + 16 - 1.85*1.85 ) * ( (8*x)^2 + "
+	"(8*y-2)^2 + (8*z)^2 + 16 - 1.85*1.85 ) - 64 * ( (8*x)^2 + (8*y-2)^2 ) ) * "
+	"( ( (8*x)^2 + ((8*y-2)+4)*((8*y-2)+4) + (8*z)^2 + 16 - 1.85*1.85 ) * ( "
+	"(8*x)^2 + ((8*y-2)+4)*((8*y-2)+4) + (8*z)^2 + 16 - 1.85*1.85 ) - 64 * ( "
+	"((8*y-2)+4)*((8*y-2)+4) + (8*z)^2 ) ) + 1025",
+	"(2*(1.3*x)^2+(1.3*y)^2+(1.3*z)^2-1)^3-(1/"
+	"10)*(1.3*x)^2*(1.3*z)^3-(1.3*y)^2*(1.3*z)^3",
+	"4*y^2-8*x^3+2*x",
+};
 
-		float x = (float)i * rx + (-2);
+// chosen implicit function
+int curr_string = -1;
 
-		for (j = 0; j < 2; j++)	{
+bool run(MarchingCubes &mc, float isoval)
+{
+	strcpy(formula, fun_def[9]);
+	if (strlen(formula) <= 0) return false;
 
-			float y = (float)j * ry + (-2);
+	// Parse formula
+	FunctionParser fparser;
+	fparser.Parse((const char *)formula, "x,y,z,c,i");
+	if (fparser.EvalError()) {
+		printf("parse error\n");
+		return false;
+	}
 
-			for (k = 0; k < 2; k++) {
-				float z = (float)k * rz + (-2);
+	float rx = (xmax - xmin) / (mc.size().x - 1);
+	float ry = (ymax - ymin) / (mc.size().y - 1);
+	float rz = (zmax - zmin) / (mc.size().z - 1);
+	glm::vec3 min_pos(xmin, ymin, zmin);
+	glm::vec3 range(rx, ry, rz);
+	for (int i = 0; i < mc.size().x; i++) {
+		float val[5];
+		val[X] = (float)i * rx + xmin;
+		for (int j = 0; j < mc.size().y; j++) {
+			val[Y] = (float)j * ry + ymin;
+			for (int k = 0; k < mc.size().z; k++) {
+				val[Z] = (float)k * rz + zmin;
 
-				float w = x - isoval;
-				mc.set_data(w, i, j, k);
+				auto w = fparser.Eval(val) - isoval;
+				mc.set_data(w, glm::ivec3(i, j, k));
 			}
 		}
 	}
-	
-	mc.set_method(originalMC == 1);
+
+	// Run MC
+	mc.SetAlgorithm(MarchingCubes::TopologicalMarchingCubes);
 	mc.run();
 
-/*
-	// Это приготовления, чтобы можно было вызывать функцию Eval
-//	FunctionParser parser; // Создать парсер - экземпляр класса FunctionParser
+	// Rescale positions
+	for (int i = 0; i < mc.nverts(); ++i) {
+		Vertex &v = mc.vertices()[i];
+		v.pos = range * v.pos + min_pos;
+		v.n = glm::normalize(v.n);
+	}
 
-	string str(argv[1]);
-//	parser.Parse(str, "x,y,z"); // Передать ему на обработку вот эту формулу
+	return true;
+}
 
-//	if (parser.EvalError()) // Нужно, чтобы проверить на опечатки и прочие ошибки, т.к. функция задается произвольной строкой
-//	{
-//		printf("parse error\n");
-//		return false;
-//	}
+int main() {
 
-		RectLattice reclat;
-	reclat.Xmin = stod (argv[2]); // считывание координат вершин параллелепипеда
-	reclat.Xmax = stod (argv[3]); // stod - преобразование string to double
-	reclat.Ymin = stod (argv[4]);
-	reclat.Ymax = stod (argv[5]);
-	reclat.Zmin = stod (argv[6]);
-	reclat.Zmax = stod (argv[7]);
+	MarchingCubes mc(glm::ivec3(50));
+	mc.Setup();
+	run(mc, 100);
 
-	double pace = stod(argv[8]); //шаг решетки
+	auto verts = std::vector<glm::vec3>();
+	verts.reserve(mc.ntrigs() * 3);
 
-vector <PointWithDensity> Nodes = reclat.GenerateRectLattice(pace);
+	rk9::PolyModel m;
 
-vector <PointWithDensity> LatticeNodes = reclat.DefineNodeDensity(str, Nodes); 
+	for (int i = 0; i < mc.ntrigs(); ++i) {
+		auto tri = mc.trig(i);
+		rk9::Point p[3];
+		for (int t = 0; t < 3; ++t) {
+			auto vertex = mc.vert(tri.ids[t]).pos;
+			p[t].X = vertex.x;
+			p[t].Y = vertex.y;
+			p[t].Z = vertex.z;
+		}
+		m.AddTriangle(p[0], p[1], p[2]);
+	}
 
-
-//std::cout << CalculateFuncValue(str, p);
-
-
-	//const float values[3]{ 2.0, 2.0, 2.0 };
-
-
-//	std::cout << parser.Eval(values); // Здесь вычисляем значение функции, передавая массивом x, y и z */
-
-	_getch();
+	m.WriteToSTLFile("output.stl");
 
 	return 0;
 }
