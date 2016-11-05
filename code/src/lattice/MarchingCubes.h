@@ -1,6 +1,7 @@
 #ifndef _MARCHINGCUBES_H_
 #define _MARCHINGCUBES_H_
 
+#include "glm/glm.hpp"
 #include <vector>
 
 //_____________________________________________________________________________
