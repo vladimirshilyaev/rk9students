@@ -3,10 +3,20 @@ import { tokenNotExpired } from 'angular2-jwt';
 
 let Auth0Lock = require('auth0-lock').default;
 
+let options = {
+    languageDictionary: {
+        emailInputPlaceholder: "email@email.com",
+        title: "WebCad"
+    },
+    theme: {
+        logo: 'https://mir-s3-cdn-cf.behance.net/project_modules/disp/47e1c322329083.56310816f1004.png'
+    },
+};
+
 @Injectable()
 export class Auth {
     // Configure Auth0
-    lock = new Auth0Lock('wFZh1IypbUquG9MyaG1nvWLeB2kzwiU5', 'aridlife.auth0.com', {});
+    lock = new Auth0Lock('wFZh1IypbUquG9MyaG1nvWLeB2kzwiU5', 'aridlife.auth0.com', options);
 
     constructor() {
         // Add callback for lock `authenticated` event
