@@ -1,58 +1,77 @@
-import { Component, OnInit, ElementRef }        from '@angular/core';
+import { Component, OnInit, ElementRef, Input, OnChanges, SimpleChanges }        from '@angular/core';
 var THREE = require("three-js")();
+var STLLoader = require('three-stl-loader')(THREE);
 
 @Component({
     selector: 'workspace',
     template: require('./workspace.component.html'),
     styles: [require('./workspace.component.scss')]
 })
-export class WorkspaceComponent implements OnInit {
+export class WorkspaceComponent implements OnInit, OnChanges {
+
+    @Input() file: any;
+
+    private loader: any;
+
+    private scene: any;
+    private camera: any;
+    private renderer: any;
 
     constructor(private myElement: ElementRef) {
 
     }
 
     ngOnInit() {
+        this.loader = new STLLoader();
         let elem = (<HTMLCollection>this.myElement.nativeElement.children).namedItem('workspace');
         let width = elem.scrollWidth;
         let height = elem.scrollHeight;
-        console.log(elem);
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor(0x3b3b3b);
-        renderer.setSize(width, height);
-        var axes = new THREE.AxisHelper(20);
-        scene.add(axes);
-        var planeGeometry = new THREE.PlaneGeometry(60, 20, 1, 1);
-        var planeMaterial = new THREE.MeshBasicMaterial({ color: 0xcccccc });
-        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.rotation.x = -0.5 * Math.PI;
-        plane.position.x = 15;
-        plane.position.y = 0;
-        plane.position.z = 0;
-        scene.add(plane);
-        var cubeGeometry = new THREE.CubeGeometry(4, 4, 4);
-        var cubeMaterial = new THREE.MeshBasicMaterial(
-            { color: 0xff0000, wireframe: true });
-        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.position.x = -4;
-        cube.position.y = 3;
-        cube.position.z = 0;
-        scene.add(cube);
-        var sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
-        var sphereMaterial = new THREE.MeshBasicMaterial(
-            { color: 0x7777ff, wireframe: true });
-        var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphere.position.x = 20;
-        sphere.position.y = 4;
-        sphere.position.z = 2;
-        scene.add(sphere);
-        camera.position.x = -30;
-        camera.position.y = 40;
-        camera.position.z = 30;
-        camera.lookAt(scene.position);
-        document.querySelector('workspace div.workspace').appendChild(renderer.domElement);
-        renderer.render(scene, camera);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setClearColor(0x3b3b3b);
+        this.renderer.setSize(width, height);
+        this.camera.position.x = -30;
+        this.camera.position.y = 40;
+        this.camera.position.z = 30;
+        this.camera.lookAt(this.scene.position);
+        document.querySelector('workspace div.workspace').appendChild(this.renderer.domElement);
+        this.render(this);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (!(<any>changes).file.isFirstChange()) {
+            console.log(this.file);
+
+            let reader = new FileReader();
+            let _self = this;
+            reader.onload = function () {
+                console.log(reader);
+                var geometry = _self.loader.parse(reader.result);
+                geometry.sourceType = "stl";
+                geometry.sourceFile = _self.file.name;
+
+                var material = new THREE.MeshStandardMaterial();
+
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = _self.file.name;
+
+                console.log(geometry);
+
+                _self.scene.add(mesh)
+            };
+
+            if (reader.readAsBinaryString !== undefined) {
+                reader.readAsBinaryString(this.file);
+            } else {
+                reader.readAsArrayBuffer(this.file);
+            }
+        }
+    }
+
+    private render(self: any)
+    {
+        this.renderer.render(self.scene, self.camera);
+        requestAnimationFrame(() => self.render(self));
     }
 }
