@@ -1,15 +1,4 @@
-﻿/**
-* @file    MarchingCubes.cpp
-* @author  Thomas Lewiner <thomas.lewiner@polytechnique.org>
-* @author  Math Dept, PUC-Rio
-* @version 0.2
-* @date    12/08/2002
-*
-* @brief   MarchingCubes Algorithm
-*/
-//________________________________________________
-
-#include <math.h>
+﻿#include <math.h>
 #include <time.h>
 #include <memory.h>
 #include <stdlib.h>
