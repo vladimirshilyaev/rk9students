@@ -1,4 +1,6 @@
-<headerbar></headerbar>
-<div class="workspace-wrapper">
-    <workspace></workspace>
+<div *ngIf="auth.authenticated()">
+    <headerbar></headerbar>
+    <div class="workspace-wrapper">
+        <workspace></workspace>
+    </div>
 </div>

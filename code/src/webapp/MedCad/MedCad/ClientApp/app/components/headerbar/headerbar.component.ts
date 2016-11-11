@@ -8,6 +8,7 @@ import { Auth } from '../../services/auth/auth.service';
     styles: [require('./headerbar.component.scss')],
     providers: [ModelsService, Auth]
 })
+
 export class HeaderbarComponent {
     private openedFile: any;
 
