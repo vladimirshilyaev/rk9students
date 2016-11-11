@@ -20,24 +20,33 @@ export class WorkspaceComponent implements OnInit, OnChanges {
     private controls: any;
 
     constructor(private myElement: ElementRef) {
-
+        this.loader = new STLLoader();
     }
 
     ngOnInit() {
-        this.loader = new STLLoader();
         let elem = (<HTMLCollection>this.myElement.nativeElement.children).namedItem('workspace');
+
         let width = elem.scrollWidth;
         let height = elem.scrollHeight;
+
         this.scene = new THREE.Scene();
+
         this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setClearColor(0x3b3b3b);
-        this.renderer.setSize(width, height);
         this.camera.position.x = -30;
         this.camera.position.y = 40;
         this.camera.position.z = 30;
         this.camera.lookAt(this.scene.position);
+
+        this.renderer = new THREE.WebGLRenderer();
+        this.renderer.setClearColor(0x3b3b3b);
+        this.renderer.setSize(width, height);
+
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(-40, 60, -10);
+        this.scene.add(spotLight);
+
         this.controls = new THREE.EditorControls(this.camera, this.renderer.domElement)
+
         document.querySelector('workspace div.workspace').appendChild(this.renderer.domElement);
         this.render(this);
     }
@@ -52,7 +61,7 @@ export class WorkspaceComponent implements OnInit, OnChanges {
                 geometry.sourceType = "stl";
                 geometry.sourceFile = _self.file.name;
 
-                var material = new THREE.MeshStandardMaterial();
+                var material = new THREE.MeshLambertMaterial({ color: 0x0087FF, emissive: 0x0087FF });
 
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.name = _self.file.name;
