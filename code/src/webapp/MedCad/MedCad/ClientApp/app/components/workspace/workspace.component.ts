@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, Input, OnChanges, SimpleChanges }        from '@angular/core';
+import { Component, OnInit, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 var THREE = require("three-js")();
 var STLLoader = require('three-stl-loader')(THREE);
+require('three-editor-controls')(THREE);
 
 @Component({
     selector: 'workspace',
@@ -16,6 +17,7 @@ export class WorkspaceComponent implements OnInit, OnChanges {
     private scene: any;
     private camera: any;
     private renderer: any;
+    private controls: any;
 
     constructor(private myElement: ElementRef) {
 
@@ -35,18 +37,17 @@ export class WorkspaceComponent implements OnInit, OnChanges {
         this.camera.position.y = 40;
         this.camera.position.z = 30;
         this.camera.lookAt(this.scene.position);
+        this.controls = new THREE.EditorControls(this.camera, this.renderer.domElement)
         document.querySelector('workspace div.workspace').appendChild(this.renderer.domElement);
         this.render(this);
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (!(<any>changes).file.isFirstChange()) {
-            console.log(this.file);
 
             let reader = new FileReader();
             let _self = this;
             reader.onload = function () {
-                console.log(reader);
                 var geometry = _self.loader.parse(reader.result);
                 geometry.sourceType = "stl";
                 geometry.sourceFile = _self.file.name;
@@ -55,8 +56,6 @@ export class WorkspaceComponent implements OnInit, OnChanges {
 
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.name = _self.file.name;
-
-                console.log(geometry);
 
                 _self.scene.add(mesh)
             };
