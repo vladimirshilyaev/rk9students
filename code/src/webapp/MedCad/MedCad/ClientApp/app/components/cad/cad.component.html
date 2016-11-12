@@ -1,5 +1,7 @@
-<input id="open-file-dlg" (change)="openedFileChanged($event)" type="file" accept="application/sla">
-<headerbar></headerbar>
-<div class="workspace-wrapper">
-    <workspace [file]="openedFile"></workspace>
+<div *ngIf="auth.authenticated()">
+    <input id="open-file-dlg" (change)="openedFileChanged($event)" type="file" accept="application/sla">
+    <headerbar></headerbar>
+    <div class="workspace-wrapper">
+        <workspace></workspace>
+    </div>
 </div>
