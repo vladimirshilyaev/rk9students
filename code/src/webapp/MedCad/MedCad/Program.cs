@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using MedCad.Database;
 
 namespace MedCad
 {
@@ -30,18 +31,18 @@ namespace MedCad
 
             var configuration = builder.Build();
 
-            string connectionString = "server=localhost;userid=root;pwd=20101995;port=3306;database=Medbox;sslmode=none;";
+            //string connectionString = "server=localhost;userid=root;pwd=20101995;port=3306;database=Medbox;sslmode=none;";
 
             // Create an employee instance and save the entity to the database
-            var entry = new Model() { Id = 1, Data = "sdfdfs", CreationDate = "2015", UserId = 24 };
+            //var entry = new Model() { Id = 1, Data = "sdfdfs", CreationDate = "2015", UserId = 24 };
 
             /*using (var context = ModelContextFactory.Create(connectionString))
             {
                 context.Add(entry);
                 context.SaveChanges();
             }*/
-             
-            Console.WriteLine($"Model was saved in the database with id: {entry.UserId}");
+
+            //Console.WriteLine($"Model was saved in the database with id: {entry.UserId}");
 
             host.Run();
         }
