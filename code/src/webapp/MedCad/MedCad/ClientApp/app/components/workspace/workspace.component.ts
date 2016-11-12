@@ -61,7 +61,8 @@ export class WorkspaceComponent implements OnInit, OnChanges {
                 geometry.sourceType = "stl";
                 geometry.sourceFile = _self.file.name;
 
-                var material = new THREE.MeshLambertMaterial({ color: 0x0087FF, emissive: 0x0087FF });
+                var color = 0x00ABE7;
+                var material = new THREE.MeshLambertMaterial({ color: color, emissive: color });
 
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.name = _self.file.name;
