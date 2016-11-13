@@ -1,34 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
-import { AppComponent } from './components/app/app.component'
-import { ProfileComponent } from './components/profile/profile.component';
-import { CadComponent } from './components/cad/cad.component';
-import { HeaderbarComponent } from './components/headerbar/headerbar.component';
-import { WorkspaceComponent } from './components/workspace/workspace.component';
-import { ModelsService } from './services/models/models.service'
+
+import { Auth } from './services/auth/auth.service';
+import { AUTH_PROVIDERS } from 'angular2-jwt';
+
+import { AppComponent } from './components/app/app.component';
+import { AppRoutingModule } from './modules/app-routing.module';
+import { CadModule } from './modules/cad/cad.module';
 
 @NgModule({
     bootstrap: [ AppComponent ],
     declarations: [
-        AppComponent,
-        CadComponent,
-        ProfileComponent,
-        HeaderbarComponent,
-        WorkspaceComponent
+        AppComponent
     ],
     providers: [
-        ModelsService,
+        AUTH_PROVIDERS,
+        Auth,
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
-        RouterModule.forRoot([
-            { path: '', redirectTo: 'cad', pathMatch: 'full' },
-            { path: 'cad', component: CadComponent },
-            { path: 'profile', component: ProfileComponent },
-            { path: '**', redirectTo: 'cad' }
-        ])
+        AppRoutingModule,
+        CadModule
     ]
 })
+
 export class AppModule {
 }
