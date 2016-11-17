@@ -24,14 +24,12 @@ message(STATUS "App: ${target}")
 set(sources
     main.cpp
     fparser.cpp
-    RectLattice.cpp
     MarchingCubes.cpp
 )
 
 set(headers
     fparser.h
-	RectLattice.h
-	PointWithDensity.h
+	UnitCell.h
 	MarchingCubes.h
 	LookUpTable.h
 	glm/glm.hpp

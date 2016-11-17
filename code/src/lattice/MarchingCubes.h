@@ -1,13 +1,3 @@
-/**
-* @file    MarchingCubes.h
-* @author  Thomas Lewiner <thomas.lewiner@polytechnique.org>
-* @author  Math Dept, PUC-Rio
-* @version 0.2
-* @date    12/08/2002
-*
-* @brief   MarchingCubes Algorithm
-*/
-//________________________________________________
 
 #ifndef _MARCHINGCUBES_H_
 #define _MARCHINGCUBES_H_
