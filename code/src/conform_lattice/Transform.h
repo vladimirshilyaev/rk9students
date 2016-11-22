@@ -15,23 +15,43 @@ namespace rk9 {
 	class Cylindric_Transformation : public Conform_Transformation {
 
 	public:
-		Point Transform(Point p, double R, double Length, double Phi0, double Dir) {
-			//масштаб по углу ‘и
-			double PhiScale = Phi0 / Length;
+		Point Transform(Point p, double R, double Dir) {
 			
 			//представление декартовых координат в виде соответствующих цилиндрических
 			//перевод координат ’ в ‘и
-			double Phi = p.X * PhiScale;
+			double Phi = p.X/R;
 			//перевод координат Y в –о
 			double Ro = R + (Dir * p.Y);
 			//перевод координат Z
-			double Z1 = p.Z;
+			double Z = p.Z;
 
 			//переход от цилиндрических координат в декартовые
 			p.X = Ro * cos(Phi);
 			p.Y = Ro * sin(Phi);
-			p.Z = Z1;
+			p.Z = Z;
 			
+			return p;
+		}
+	};
+
+	class Spheric_Transformation : public Conform_Transformation {
+
+	public:
+		Point Transform(Point p, double R, double Dir) {
+
+			//представление декартовых координат в виде соответствующих сферических
+			//перевод координат ’ в ‘и
+			double Phi = p.X / R;
+			//перевод координат Y в –о
+			double Ro = R + (Dir * p.Y);
+			//перевод координат Z
+			double Theta = p.Z / (2*R);
+
+			//переход от цилиндрических координат в декартовые
+			p.X = Ro * sin(Theta) * cos(Phi);
+			p.Y = Ro * sin(Theta) * sin(Phi);
+			p.Z = Ro * cos(Theta);
+
 			return p;
 		}
 	};

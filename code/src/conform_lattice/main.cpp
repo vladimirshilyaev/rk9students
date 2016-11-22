@@ -9,7 +9,7 @@ using namespace rk9;
 using namespace std;
 
 
-bool run(MarchingCubes &mc, double Length, double Width, double Height, double pace){
+bool run(MarchingCubes &mc, double Length, double Width, double Height){
 					
 	enum Axis { X = 0, Y = 1, Z = 2 };
 	
@@ -52,34 +52,62 @@ bool run(MarchingCubes &mc, double Length, double Width, double Height, double p
 
 int main (int argc, char ** argv) {
 	
+	/*на вход принимаются параметры из командной строки:
+	-тип фигуры (1-цилиндр, 0 - сфера)
+	-радиус цилиндра/сферы
+	-толщина слоя
+	-высота цилиндра/зенитный угол сферы
+	-угол сектора цилиндра/азимутальный угол сектора сферы
+	-Направление наращивания 1 - положительное, 0 - отрицательное
+	*/
+	
+	/*примеры входных данных цилиндра:
+	1 10 5 30 360 1
+	1 10 5 30 270 0
+	*/
+	
+	/*примеры входных данных сферы:
+	0 10 5 360 360 1
+	0 10 5 180 270 -1
+	*/
+	
+	
 	const double PI = 3.141592653589793;
-
-	//радиус цилиндра
-	double R = stod(argv[1]);
-	//толщина слоя
-	double Width = stod(argv[2]);
-	//высота цилиндра
-	double Height = stod(argv[3]);
-	//угол строящегося сектора цилиндра
-	double Phi0 = stod(argv[4]) * (PI / 180);
-	//длина окружности цилиндра
-	double Length = 2 * PI * R;
-	//Направление наращивания
+	//множитель перевода из градусов в радианы
+	double DegToRad = PI / 180;
+	//Тип фигуры 
+	double Type = stod(argv[1]);
+	//радиус
+	double R = stod(argv[2]);
+	//толщина (ширина прямоугольной решетки для "оборачивания")
+	double Width = stod(argv[3]);
+	//высота цилиндра/длина сектора сферы по зениту (высота прямоугольной решетки для "оборачивания")
+	double Height;
+	//зенитный угол сектора сферы
+	double Theta0;
+	if (Type)
+		Height = stod(argv[4]);
+	else
+	{
+		Theta0 = stod(argv[4]) * DegToRad;
+		Height = Theta0 * R;
+	}	
+	//угол сектора цилиндра/азимутальный угол сектора сферы
+	double Phi0 = stod(argv[5]) * DegToRad;
+	//длина сектора цилиндра/сектора сферы по азимуту(длина прямоугольной решетки для "оборачивания")
+	double Length = Phi0 * R;
+	//Направление наращивания 1 - положительное, 0 - отрицательное
 	double Dir;
-	if (stod(argv[5]))
+	if (stod(argv[6]))
 		Dir = 1;
 	else
 		Dir = -1;
-	
-	double pace = stod(argv[6]);
-
-	int cells_count = (int) ((Length) / pace);
 	
 	MarchingCubes mc(glm::ivec3(100));
 	mc.Setup();
 	
 	//запуск построения прямоугольной решетки
-	run(mc, Length, Width, Height, pace);
+	run(mc, Length, Width, Height);
 
 	auto verts = std::vector<glm::vec3>();
 	verts.reserve(mc.ntrigs() * 3);
@@ -97,9 +125,19 @@ int main (int argc, char ** argv) {
 			p[t].Y = vertex.y;
 			p[t].Z = vertex.z;
 
-			//запуск трасформации прямоугольной решетки в цилиндрическую
-			Cylindric_Transformation Coords;
-			p[t] = Coords.Transform(p[t],R, Length, Phi0,Dir);
+
+			if(Type)
+			{
+				//запуск трасформации прямоугольной решетки в цилиндрическую
+				Cylindric_Transformation Coords;
+				p[t] = Coords.Transform(p[t], R, Dir);
+			}
+			else
+			{ 
+				//запуск трасформации прямоугольной решетки в сферическую
+				Spheric_Transformation Coords;
+				p[t] = Coords.Transform(p[t], R, Dir);
+			}
 
 		}
 
