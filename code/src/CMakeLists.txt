@@ -30,6 +30,9 @@ add_subdirectory(lattice)
 set(IDE_FOLDER "Apps")
 add_subdirectory(boolean_poly)
 
+# Apps
+set(IDE_FOLDER "Apps")
+add_subdirectory(conform_lattice)
 
 # 
 # Deployment
