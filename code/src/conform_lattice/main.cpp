@@ -68,7 +68,7 @@ int main (int argc, char ** argv) {
 	
 	/*примеры входных данных сферы:
 	0 10 5 360 360 1
-	0 10 5 180 270 -1
+	0 10 5 180 270 0
 	*/
 	
 	
@@ -118,7 +118,6 @@ int main (int argc, char ** argv) {
 		auto tri = mc.trig(i);
 
 		rk9::Point p[3];
-
 		for (int t = 0; t < 3; ++t) {
 			auto vertex = mc.vert(tri.ids[t]).pos;
 			p[t].X = vertex.x;
@@ -130,7 +129,7 @@ int main (int argc, char ** argv) {
 			{
 				//запуск трасформации прямоугольной решетки в цилиндрическую
 				Cylindric_Transformation Coords;
-				p[t] = Coords.Transform(p[t], R, Dir);
+				p[t] = Coords.Transform(p[t], R, Dir, i);
 			}
 			else
 			{ 

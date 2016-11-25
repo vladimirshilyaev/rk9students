@@ -15,7 +15,7 @@ namespace rk9 {
 	class Cylindric_Transformation : public Conform_Transformation {
 
 	public:
-		Point Transform(Point p, double R, double Dir) {
+		Point Transform(Point p, double R, double Dir, int i) {
 			
 			//представление декартовых координат в виде соответствующих цилиндрических
 			//перевод координат Х в Фи
@@ -29,7 +29,7 @@ namespace rk9 {
 			p.X = Ro * cos(Phi);
 			p.Y = Ro * sin(Phi);
 			p.Z = Z;
-			
+
 			return p;
 		}
 	};
