@@ -21,7 +21,7 @@ bool run(MarchingCubes &mc, double Length, double Width, double Height){
 	glm::vec3 range(rx, ry, rz);
 
 	for (int i = 0; i < mc.size().x; i++) {
-		float val[5];
+		float val[3];
 		val[X] = (float)i * rx;
 		for (int j = 0; j < mc.size().y; j++) {
 			val[Y] = (float)j * ry;
@@ -108,6 +108,10 @@ int main (int argc, char ** argv) {
 	
 	//запуск построения прямоугольной решетки
 	run(mc, Length, Width, Height);
+
+	//std vector shrink to fit
+	//resize
+	//shrink_to_fit
 
 	auto verts = std::vector<glm::vec3>();
 	verts.reserve(mc.ntrigs() * 3);

@@ -21,6 +21,7 @@ message(STATUS "App: ${target}")
 # Sources
 # 
 
+
 set(sources
     main.cpp
     MarchingCubes.cpp
@@ -33,6 +34,7 @@ set(headers
 	glm/glm.hpp
 	Transform.h
 )
+
 
 #add_subdirectory(glm)
 
