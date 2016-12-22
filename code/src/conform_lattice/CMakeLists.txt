@@ -25,6 +25,7 @@ message(STATUS "App: ${target}")
 set(sources
     main.cpp
     MarchingCubes.cpp
+	
 )
 
 set(headers
@@ -33,6 +34,7 @@ set(headers
 	LookUpTable.h
 	glm/glm.hpp
 	Transform.h
+	
 )
 
 

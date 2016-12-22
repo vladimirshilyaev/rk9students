@@ -42,7 +42,7 @@ bool run(MarchingCubes &mc, float isoval, string function,
 				if (w > 0.0) {
 					mc.set_data(w, glm::ivec3(i, j, k)); }
 				if (w <= 0.0) {
-					Schwarz_W Cell;
+					Schoen_Gyroid Cell;
 					double build_cell = Cell.Eval(val[X],val[Y],val[Z]);
 					mc.set_data(build_cell, glm::ivec3(i, j, k));
 				}
