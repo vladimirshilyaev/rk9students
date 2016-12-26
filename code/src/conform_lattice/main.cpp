@@ -74,7 +74,7 @@ bool run_spheric(MarchingCubes &mc, double R, double Length, double Width, doubl
 				
 				if (sqrt(pow(val[X], 2) + pow(val[Y], 2)) < ((PI/2)*R))
 				{
-					Schoen_Gyroid Cell;
+					Schwarz_Primitive_pinched Cell;
 					double build_cell = Cell.Eval(val[X], val[Y], val[Z]);
 					mc.set_data(build_cell, glm::ivec3(i, j, k));
 				}
